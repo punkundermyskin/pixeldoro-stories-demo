@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="robots" content="noindex, nofollow">
+    <title>pixeldoro weekly challenge</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: #1a1a1a;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            height: 100dvh;
+            margin: 0;
+            padding: 0;
+        }
+
+        @media (max-width: 767px) {
+            body {
+                align-items: stretch;
+                justify-content: stretch;
+            }
+        }
+
+        .story-container {
+            width: 100%;
+            height: 100vh;
+            height: 100dvh;
+            max-width: 375px;
+            position: relative;
+            border-radius: 0;
+            overflow: hidden;
+            box-shadow: none;
+            cursor: pointer;
+        }
+
+        @media (min-width: 768px) {
+            .story-container {
+                width: 375px;
+                height: 667px;
+                max-height: 667px;
+                border-radius: 20px;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            }
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: transform 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: max(50px, env(safe-area-inset-top) + 30px) max(20px, env(safe-area-inset-right) + 15px) max(40px, env(safe-area-inset-bottom) + 20px) max(20px, env(safe-area-inset-left) + 15px);
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        @media (max-width: 767px) {
+            .slide {
+                background: none !important;
+                width: 100vw;
+                left: 0;
+                right: 0;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .slide {
+                padding: 60px 30px 30px 30px;
+            }
+        }
+
+        .slide.hidden {
+            transform: translateX(100%);
+        }
+
+        @media (max-width: 767px) {
+            .slide.hidden {
+                transform: translateX(100vw);
+            }
+        }
+
+        /* Slide 1 - Community Goal & Podium */
+        .slide-1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-image: url('../icons-bg/full-scale-bg-1.png');
+            background-size: cover;
+            background-position: center;
+            background-blend-mode: overlay;
+            justify-content: space-evenly;
+            padding-top: max(50px, env(safe-area-inset-top) + 30px);
+            padding-bottom: max(50px, env(safe-area-inset-bottom) + 30px);
+        }
+
+        .slide-1::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(102, 126, 234, 0.85);
+        }
+
+        @media (max-width: 767px) {
+            .slide-1::before {
+                display: none;
+            }
+        }
+
+        .slide-1 > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .week-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            font-weight: 600;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .main-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            letter-spacing: -1px;
+            line-height: 1.1;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards;
+        }
+
+        .community-goal {
+            margin: 20px 0;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 2px solid rgba(255, 215, 0, 0.4);
+            opacity: 0;
+            animation: fadeInUp 1.2s ease forwards;
+        }
+
+        .goal-label {
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .goal-progress {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 6px;
+        }
+
+        .goal-status {
+            font-size: 1.1rem;
+            margin-top: 6px;
+            color: #00FF7F;
+            font-weight: 600;
+        }
+
+        .participants-count {
+            margin-top: 8px;
+            color: rgba(255,255,255,0.7);
+            font-size: 0.75rem;
+        }
+
+        .podium {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 4px;
+            margin-top: 15px;
+            padding: 0 10px;
+        }
+
+        .podium-place {
+            width: 85px;
+            text-align: center;
+            opacity: 0;
+            animation: slideUp 0.5s ease-out forwards;
+        }
+
+        .podium-place.first {
+            width: 95px;
+        }
+
+        .podium-place:nth-child(1) { animation-delay: 1.6s; }
+        .podium-place:nth-child(2) { animation-delay: 1.4s; }
+        .podium-place:nth-child(3) { animation-delay: 1.8s; }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .podium-rank {
+            font-size: 1.5rem;
+            margin-bottom: 4px;
+        }
+
+        .podium-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-bottom: 5px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            object-fit: cover;
+            background: rgba(255, 255, 255, 0.1);
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+        }
+
+        .podium-place.first .podium-avatar {
+            border-color: rgba(255, 215, 0, 0.8);
+            width: 48px;
+            height: 48px;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+        }
+
+        .podium-place.second .podium-avatar {
+            border-color: rgba(192, 192, 192, 0.8);
+        }
+
+        .podium-place.third .podium-avatar {
+            border-color: rgba(205, 127, 50, 0.8);
+        }
+
+        .podium-name {
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin: 3px 0;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            max-width: 100%;
+        }
+
+        .podium-name-text {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 100%;
+        }
+
+        .podium-score {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #FFD700;
+            margin: 2px 0;
+        }
+
+        .podium-label {
+            font-size: 0.55rem;
+            color: rgba(255,255,255,0.6);
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        .position-change {
+            display: inline-block;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 2px 5px;
+            border-radius: 6px;
+            margin-left: 4px;
+            vertical-align: middle;
+        }
+
+        .podium-name .position-change {
+            margin-left: 0;
+            font-size: 0.6rem;
+            padding: 1px 4px;
+        }
+
+        .position-up {
+            background: rgba(0, 255, 127, 0.2);
+            color: #00FF7F;
+        }
+
+        .position-down {
+            background: rgba(255, 99, 71, 0.2);
+            color: #FF6347;
+        }
+
+        .position-new {
+            background: rgba(255, 215, 0, 0.2);
+            color: #FFD700;
+            font-size: 0.65rem;
+        }
+
+        .podium-stand {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 8px 8px 0 0;
+            padding: 10px 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%;
+        }
+
+        .podium-place.first .podium-stand {
+            min-height: 125px;
+            background: rgba(255, 215, 0, 0.15);
+            border-color: rgba(255, 215, 0, 0.4);
+        }
+
+        .podium-place.second .podium-stand {
+            min-height: 110px;
+            background: rgba(192, 192, 192, 0.15);
+            border-color: rgba(192, 192, 192, 0.4);
+        }
+
+        .podium-place.third .podium-stand {
+            min-height: 95px;
+            background: rgba(205, 127, 50, 0.15);
+            border-color: rgba(205, 127, 50, 0.4);
+        }
+
+        /* Slide 2 - Other Rankings */
+        .slide-2 {
+            background: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%);
+            background-image: url('../icons-bg/gameplay-work-bg.png');
+            background-size: cover;
+            background-position: center;
+            background-blend-mode: overlay;
+            justify-content: center;
+        }
+
+        .slide-2::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(139, 92, 246, 0.85);
+        }
+
+        @media (max-width: 767px) {
+            .slide-2::before {
+                display: none;
+            }
+        }
+
+        .slide-2 > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .compact-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .compact-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            opacity: 0;
+            animation: slideInRight 0.3s ease-out forwards;
+        }
+
+        .compact-row:nth-child(1) { animation-delay: 0.1s; }
+        .compact-row:nth-child(2) { animation-delay: 0.15s; }
+        .compact-row:nth-child(3) { animation-delay: 0.2s; }
+        .compact-row:nth-child(4) { animation-delay: 0.25s; }
+        .compact-row:nth-child(5) { animation-delay: 0.3s; }
+        .compact-row:nth-child(6) { animation-delay: 0.35s; }
+        .compact-row:nth-child(7) { animation-delay: 0.4s; }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .compact-rank {
+            font-size: 1rem;
+            font-weight: 700;
+            min-width: 30px;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .compact-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            object-fit: cover;
+            background: rgba(255, 255, 255, 0.1);
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+        }
+
+        .compact-name {
+            flex: 1;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .compact-score {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #FFD700;
+        }
+
+        /* Slide 3 - Stats Summary */
+        .slide-3 {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d3748 100%);
+            justify-content: center;
+        }
+
+        @media (max-width: 767px) {
+            .slide-3 {
+                background: none !important;
+                min-height: 100vh;
+                min-height: 100dvh;
+            }
+
+            .slide-1 {
+                background: none !important;
+                min-height: 100vh;
+                min-height: 100dvh;
+            }
+
+            .slide-2 {
+                background: none !important;
+                min-height: 100vh;
+                min-height: 100dvh;
+            }
+        }
+
+        .stats-container {
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .week-summary-title {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 30px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            opacity: 0;
+            animation: scaleIn 0.4s ease-out forwards;
+        }
+
+        .stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .stat-card:nth-child(3) { animation-delay: 0.3s; }
+        .stat-card:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 6px;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.6);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .motivation-text {
+            text-align: center;
+            margin-top: 15px;
+            padding: 12px 15px;
+            background: rgba(102, 126, 234, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            border: 1px solid rgba(102, 126, 234, 0.4);
+            opacity: 0;
+            animation: fadeIn 1s ease forwards;
+            animation-delay: 0.5s;
+        }
+
+        .motivation-emoji {
+            font-size: 1.5rem;
+            margin-bottom: 6px;
+        }
+
+        .motivation-message {
+            font-size: 0.9rem;
+            line-height: 1.3;
+            color: white;
+            font-weight: 600;
+        }
+
+        .week-highlights {
+            text-align: left;
+            margin-top: 15px;
+            padding: 12px 15px;
+            background: rgba(255, 215, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            opacity: 0;
+            animation: fadeIn 1s ease forwards;
+            animation-delay: 0.6s;
+        }
+
+        .highlights-title {
+            font-size: 0.75rem;
+            color: #FFD700;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .highlight-item {
+            font-size: 0.8rem;
+            color: white;
+            margin: 5px 0;
+            line-height: 1.3;
+        }
+
+        .highlight-icon {
+            display: inline-block;
+            width: 16px;
+            text-align: center;
+            margin-right: 5px;
+        }
+
+        .highlight-value {
+            color: #FFD700;
+            font-weight: 700;
+        }
+
+        .story-footer {
+            text-align: center;
+            padding: 10px;
+            color: rgba(255,255,255,0.4);
+            font-size: 0.65rem;
+            margin-top: 20px;
+        }
+
+        /* Progress dots */
+        .progress-dots {
+            position: absolute;
+            top: max(20px, env(safe-area-inset-top) + 10px);
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        @media (min-width: 768px) {
+            .progress-dots {
+                top: 20px;
+            }
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.4);
+            transition: background 0.3s ease;
+        }
+
+        .dot.active {
+            background: white;
+        }
+
+        /* Swipe hint */
+        .swipe-hint {
+            position: absolute;
+            bottom: max(20px, env(safe-area-inset-bottom) + 10px);
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.7);
+            font-size: 12px;
+            opacity: 0;
+            animation: fadeIn 3s ease forwards;
+            white-space: nowrap;
+        }
+
+        @media (min-width: 768px) {
+            .swipe-hint {
+                bottom: 20px;
+            }
+        }
+
+        @media (max-width: 767px) and (max-height: 667px) {
+            .main-title {
+                font-size: 2rem;
+            }
+
+            .goal-progress {
+                font-size: 2rem;
+            }
+
+            .community-goal {
+                margin: 20px 0;
+                padding: 15px;
+            }
+
+            .podium-avatar {
+                width: 40px;
+                height: 40px;
+            }
+
+            .podium-place.first .podium-avatar {
+                width: 48px;
+                height: 48px;
+            }
+
+            .podium-stand {
+                padding: 8px 5px;
+            }
+
+            .podium-place.first .podium-stand {
+                min-height: 120px;
+            }
+
+            .podium-place.second .podium-stand {
+                min-height: 105px;
+            }
+
+            .podium-place.third .podium-stand {
+                min-height: 90px;
+            }
+        }
+
+        /* Mobile overlay */
+        .mobile-overlay {
+            display: none;
+        }
+
+        @media (max-width: 767px) {
+            .mobile-overlay {
+                display: block;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                height: 100dvh;
+                background: rgba(102, 126, 234, 0.85);
+                z-index: 0;
+                pointer-events: none;
+                transition: background 0.4s ease;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="story-container" onclick="nextSlide()">
+        <div class="mobile-overlay" id="mobileOverlay"></div>
+        <div class="progress-dots">
+            <div class="dot active"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+
+        <!-- Slide 1: Community Goal & Top 3 -->
+        <div class="slide slide-1">
+            <div>
+                <div class="week-badge">Nov 03 - Nov 09, 2025</div>
+                <h1 class="main-title">weekly<br>challenge</h1>
+
+                <div class="community-goal">
+                    <div class="goal-label">community goal</div>
+                    <div class="goal-progress">1790/1750</div>
+                    <div class="goal-status">🎉 REACHED!</div>
+                    <div class="participants-count">139 active participants</div>
+                </div>
+            </div>
+
+            <div class="podium">
+                <div class="podium-place second">
+                    <div class="podium-rank">🥈</div>
+                    <div class="podium-stand">
+                        <img src="avatars/$2bizbots_rabbit.png" alt="keretto" class="podium-avatar">
+                        <div class="podium-name">
+                            <span class="podium-name-text">keretto</span>
+                            <span class="position-change position-down">↓1</span>
+                        </div>
+                        <div class="podium-score">65</div>
+                        <div class="podium-label">pomodoros</div>
+                    </div>
+                </div>
+                <div class="podium-place first">
+                    <div class="podium-rank">🥇</div>
+                    <div class="podium-stand">
+                        <img src="avatars/$femandroid1.png" alt="Bunny" class="podium-avatar">
+                        <div class="podium-name">
+                            <span class="podium-name-text">Bunny</span>
+                            <span class="position-change position-up">↑3</span>
+                        </div>
+                        <div class="podium-score">66</div>
+                        <div class="podium-label">pomodoros</div>
+                    </div>
+                </div>
+                <div class="podium-place third">
+                    <div class="podium-rank">🥉</div>
+                    <div class="podium-stand">
+                        <img src="avatars/malestudent1_transparent.png" alt="gben91" class="podium-avatar">
+                        <div class="podium-name">
+                            <span class="podium-name-text">gben91</span>
+                            <span class="position-change position-new">NEW</span>
+                        </div>
+                        <div class="podium-score">63</div>
+                        <div class="podium-label">pomodoros</div>
+                    </div>
+                </div>
+            </div>
+            <div class="swipe-hint">tap to continue →</div>
+        </div>
+
+        <!-- Slide 2: Rankings 4-10 -->
+        <div class="slide slide-2 hidden">
+            <h2 class="section-title">other legends</h2>
+            <div class="compact-list">
+                <div class="compact-row">
+                    <div class="compact-rank">#4</div>
+                    <img src="avatars/femaleofficeworker1_transparent.png" alt="SimSim" class="compact-avatar">
+                    <div class="compact-name">SimSim <span class="position-change position-down">↓1</span></div>
+                    <div class="compact-score">61</div>
+                </div>
+                <div class="compact-row">
+                    <div class="compact-rank">#5</div>
+                    <img src="avatars/$mascandroid2.png" alt="barensel" class="compact-avatar">
+                    <div class="compact-name">barensel <span class="position-change position-up">↑7</span></div>
+                    <div class="compact-score">59</div>
+                </div>
+                <div class="compact-row">
+                    <div class="compact-rank">#6</div>
+                    <img src="avatars/malestudent1_transparent.png" alt="Rin" class="compact-avatar">
+                    <div class="compact-name">Rin <span class="position-change position-down">↓1</span></div>
+                    <div class="compact-score">58</div>
+                </div>
+                <div class="compact-row">
+                    <div class="compact-rank">#7</div>
+                    <img src="avatars/$2sheilas_pompom.png" alt="yvice_" class="compact-avatar">
+                    <div class="compact-name">yvice_ <span class="position-change position-up">↑21</span></div>
+                    <div class="compact-score">47</div>
+                </div>
+                <div class="compact-row">
+                    <div class="compact-rank">#8</div>
+                    <img src="avatars/femalestudent1_transparent.png" alt="Nini" class="compact-avatar">
+                    <div class="compact-name">Nini <span class="position-change position-up">↑10</span></div>
+                    <div class="compact-score">41</div>
+                </div>
+                <div class="compact-row">
+                    <div class="compact-rank">#9</div>
+                    <img src="avatars/femaleofficeworker1_transparent.png" alt="KK" class="compact-avatar">
+                    <div class="compact-name">KK <span class="position-change position-up">↑71</span></div>
+                    <div class="compact-score">33</div>
+                </div>
+                <div class="compact-row">
+                    <div class="compact-rank">#10</div>
+                    <img src="avatars/$femyouth1.png" alt="lily" class="compact-avatar">
+                    <div class="compact-name">lily <span class="position-change position-up">↑86</span></div>
+                    <div class="compact-score">32</div>
+                </div>
+            </div>
+            <div class="swipe-hint">see week stats →</div>
+        </div>
+
+        <!-- Slide 3: Stats Summary -->
+        <div class="slide slide-3 hidden">
+            <div class="stats-container">
+                <h2 class="week-summary-title">week in review</h2>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">1790</div>
+                        <div class="stat-label">total pomodoros</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">139</div>
+                        <div class="stat-label">participants</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">12.9</div>
+                        <div class="stat-label">avg sessions</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">102%</div>
+                        <div class="stat-label">goal reached</div>
+                    </div>
+                </div>
+
+                <div class="week-highlights">
+                    <div class="highlights-title">⚡ week highlights</div>
+                    <div class="highlight-item">
+                        <span class="highlight-icon">🏆</span>
+                        <span class="highlight-value">Bunny</span> climbed from #4 to #1 (+32% vs prev week)
+                    </div>
+                    <div class="highlight-item">
+                        <span class="highlight-icon">📈</span>
+                        <span class="highlight-value">+290</span> total pomodoros vs last week
+                    </div>
+                    <div class="highlight-item">
+                        <span class="highlight-icon">✨</span>
+                        <span class="highlight-value">5 new legends</span> joined the top 10
+                    </div>
+                </div>
+
+                <div class="motivation-text">
+                    <div class="motivation-emoji">🫶</div>
+                    <div class="motivation-message">
+                        y'all really showed up. keep inspiring each other.
+                    </div>
+                </div>
+
+                <div class="story-footer">
+                    generated on nov 11, 2025
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Password protection
+        const ACCESS_TOKEN = 'pixeldoro_weekly_2025';
+
+        function checkAccess() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+
+            if (token !== ACCESS_TOKEN) {
+                document.body.innerHTML = `
+                    <div style="
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100vh;
+                        background: #1a1a1a;
+                        color: white;
+                        font-family: 'JetBrains Mono', monospace;
+                        text-align: center;
+                        padding: 20px;
+                    ">
+                        <div>
+                            <h2 style="margin-bottom: 20px;">🔒 Access Restricted</h2>
+                            <p>This is a private prototype. Please contact the developer for access.</p>
+                        </div>
+                    </div>
+                `;
+                return false;
+            }
+            return true;
+        }
+
+        if (!checkAccess()) {
+            throw new Error('Access denied');
+        }
+
+        // Slide navigation
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.dot');
+
+        function nextSlide() {
+            // Update mobile overlay and background first
+            if (window.innerWidth <= 767) {
+                const nextSlideIndex = currentSlide < slides.length - 1 ? currentSlide + 1 : 0;
+                updateMobileOverlay(nextSlideIndex);
+                updateBodyBackground(nextSlideIndex);
+            }
+
+            if (currentSlide < slides.length - 1) {
+                slides[currentSlide].classList.add('hidden');
+                dots[currentSlide].classList.remove('active');
+
+                currentSlide++;
+
+                slides[currentSlide].classList.remove('hidden');
+                dots[currentSlide].classList.add('active');
+            } else {
+                // Reset to first slide
+                slides[currentSlide].classList.add('hidden');
+                dots[currentSlide].classList.remove('active');
+
+                currentSlide = 0;
+
+                slides[currentSlide].classList.remove('hidden');
+                dots[currentSlide].classList.add('active');
+            }
+        }
+
+        function updateMobileOverlay(slideIndex = currentSlide) {
+            const overlays = [
+                'rgba(102, 126, 234, 0.85)',   // Slide 1 - purple/blue
+                'rgba(139, 92, 246, 0.85)',    // Slide 2 - purple
+                'rgba(26, 26, 26, 0.7)'         // Slide 3 - dark
+            ];
+
+            const mobileOverlay = document.getElementById('mobileOverlay');
+            if (mobileOverlay && window.innerWidth <= 767) {
+                mobileOverlay.style.background = overlays[slideIndex];
+            }
+        }
+
+        function updateBodyBackground(slideIndex = currentSlide) {
+            const backgrounds = [
+                'url("../icons-bg/full-scale-bg-1.png")',     // Slide 1 - community goal
+                'url("../icons-bg/gameplay-work-bg.png")',     // Slide 2 - rankings
+                'linear-gradient(135deg, #1a1a1a 0%, #2d3748 100%)'  // Slide 3 - stats
+            ];
+
+            if (window.innerWidth <= 767) {
+                document.body.style.background = backgrounds[slideIndex];
+                document.body.style.backgroundSize = 'cover';
+                document.body.style.backgroundPosition = 'center';
+            } else {
+                document.body.style.background = '#1a1a1a';
+                document.body.style.backgroundSize = 'auto';
+                document.body.style.backgroundPosition = 'initial';
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateBodyBackground();
+            updateMobileOverlay();
+
+            // Update on resize
+            window.addEventListener('resize', function() {
+                updateBodyBackground();
+                updateMobileOverlay();
+            });
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' && currentSlide > 0) {
+                slides[currentSlide].classList.add('hidden');
+                dots[currentSlide].classList.remove('active');
+                currentSlide--;
+                slides[currentSlide].classList.remove('hidden');
+                dots[currentSlide].classList.add('active');
+                updateMobileOverlay();
+                updateBodyBackground();
+            }
+            if (e.key === 'ArrowRight') {
+                nextSlide();
+            }
+        });
+    </script>
+</body>
+</html>
